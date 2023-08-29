@@ -21,6 +21,7 @@ lock = threading.Lock()
 # Стартове привітання
 # Starting greeting
 
+
 @bot.message_handler(commands=["start", "overwriting"])
 def start(message):
     markup = types.InlineKeyboardMarkup()
@@ -32,6 +33,7 @@ def start(message):
 # Функція для вибору міста
 # Function for selecting a city
 
+
 def choose_a_city(message):
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
     for city in CITES_LIST:
@@ -39,15 +41,19 @@ def choose_a_city(message):
     return bot.send_message(message.chat.id, "Ось список міст Укріїни, вибереть серед них своє", reply_markup=markup)
 
 # Обробка колбеків
-#Callbacks processing 
+# Callbacks processing
+
 
 @bot.callback_query_handler(func=lambda callback: True)
 def callbacks(callback):
     if callback.data == 'select_your_city':
         choose_a_city(callback.message)
     elif callback.data == 'change_city':
-        delete_from_DB(callback)
-        choose_a_city(callback.message)
+        try:
+            delete_from_DB(callback)
+            choose_a_city(callback.message)
+        except:
+            pass
     elif callback.data == 'today_weather':
         print_today_weather(callback.message)
     elif callback.data == 'tomorrow_weather':
@@ -72,6 +78,7 @@ def write_to_db(message):
 
 # Панель з кнопками
 # Panel with buttons
+
 
 @bot.message_handler(commands=["work"])
 def working_condition(message):
@@ -114,6 +121,8 @@ def print_tomorrow_weather(message):
 
 # Зчитує вибране місто з БД
 # Reads the selected city from the database
+
+
 def return_selected_city(message):
     with lock:
         city_name = cursor.execute(
@@ -122,17 +131,13 @@ def return_selected_city(message):
         cursor.close
     return (city_name)
 
+
 def delete_from_DB(callback):
-    try:
-        with lock:
-            cursor.execute('DELETE FROM users WHERE chat_id = %d' %
-                           callback.message.chat.id)
-            db.commit()
-            cursor.close
-    except:
-        pass
-
-
+    with lock:
+        cursor.execute('DELETE FROM users WHERE chat_id = %d' %
+                       callback.message.chat.id)
+        db.commit()
+        cursor.close
 
 
 # Постійна робота програми
