@@ -59,7 +59,7 @@ def callbacks(callback):
 
 
 # Запис данниз до БД
-# Запис данниз до БД
+# Writing data to the database
 @bot.message_handler(func=lambda message: message.text.strip() in CITES_LIST)
 def write_to_db(message):
     try:
