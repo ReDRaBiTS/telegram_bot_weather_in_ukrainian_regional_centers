@@ -1,0 +1,3 @@
+API_KEY_WT = ""
+API_KEY_TG = ""
+CITES_LIST = ""

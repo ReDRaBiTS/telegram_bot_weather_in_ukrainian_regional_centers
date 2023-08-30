@@ -46,11 +46,7 @@ def callbacks(callback):
     if callback.data == 'select_your_city':
         choose_a_city(callback.message)
     elif callback.data == 'change_city':
-        with lock:
-            cursor.execute('DELETE FROM users WHERE chat_id = %d' %
-                           callback.message.chat.id)
-            db.commit()
-            cursor.close
+        delete_from_DB(callback)
         choose_a_city(callback.message)
     elif callback.data == 'today_weather':
         print_today_weather(callback.message)
@@ -59,7 +55,7 @@ def callbacks(callback):
 
 
 # Запис данниз до БД
-# Writing data to the database
+# Запис данниз до БД
 @bot.message_handler(func=lambda message: message.text.strip() in CITES_LIST)
 def write_to_db(message):
     try:
@@ -125,6 +121,18 @@ def return_selected_city(message):
         db.commit()
         cursor.close
     return (city_name)
+
+def delete_from_DB(callback):
+    try:
+        with lock:
+            cursor.execute('DELETE FROM users WHERE chat_id = %d' %
+                           callback.message.chat.id)
+            db.commit()
+            cursor.close
+    except:
+        pass
+
+
 
 
 # Постійна робота програми

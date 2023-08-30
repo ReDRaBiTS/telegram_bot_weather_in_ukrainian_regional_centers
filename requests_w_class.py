@@ -1,11 +1,11 @@
 import requests
 import datetime
-from variables import API_KEY_WT
+from telegram_bot_weather_in_ukrainian_regional_centers.variables import API_KEY_WT
 
 
 class Weather:
 
-    def __init__(self, city):
+    def __init__(self, city: str):
         self.city = city
 
     weather_dict = {
@@ -27,13 +27,13 @@ class Weather:
     }
 
     wind_directions = {
-        'Північний': (348.75, 11.25),
-        'Північно-східний': (11.25, 78.75),
-        'Східний': (78.75, 101.25),
-        'Південно-східний': (101.25, 168.75),
-        'Південний': (168.75, 191.25),
+        'Північний':         (348.75, 11.25),
+        'Північно-східний':  (11.25, 78.75),
+        'Східний':           (78.75, 101.25),
+        'Південно-східний':  (101.25, 168.75),
+        'Південний':         (168.75, 191.25),
         'Південно-західний': (191.25, 258.75),
-        'Західний': (258.75, 281.25),
+        'Західний':          (258.75, 281.25),
         'Північно-західний': (281.25, 348.75),
     }
 
@@ -71,13 +71,13 @@ class Weather:
 
     # Запит на сайт openweathermap.org за сьогоднішньою погоду
     # Request to openweathermap.org for today's weather
-    def weather_request(self, city):
+    def weather_request(self, city : str):
         weather_req = requests.get(
             f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY_WT}&units=metric")
         return weather_req
 
     # Request to openweathermap.org for tomorrow weather
-    def tomorrow_weather_request(self, city):
+    def tomorrow_weather_request(self, city: str):
         weather_req = requests.get(
             f"https://api.openweathermap.org/data/2.5/forecast?q={city}&appid={API_KEY_WT}&units=metric")
         return weather_req
@@ -106,7 +106,7 @@ class Weather:
     # Конвертуємо напрям вітру
     # Convert the wind direction
 
-    def convert_to_wind_direction(self, degrees):
+    def convert_to_wind_direction(self, degrees:int):
 
         # Перевірка, щоб кут був у діапазоні [0, 360)
         degrees = degrees % 360
